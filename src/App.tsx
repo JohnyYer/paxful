@@ -3,8 +3,8 @@ import { Grid } from '@material-ui/core';
 import Navigation from './components/header/Navigation';
 import SubNavigation from './components/header/SubNavigation';
 import LeftBar from './components/left-bar/LeftBar';
-import Chat from './components/chat/Chat';
 import RightBar from './components/right-bar/RightBar';
+import Chat from './components/main/Chat';
 
 const App: React.FC = () => {
   return (
@@ -17,7 +17,7 @@ const App: React.FC = () => {
         <Grid item md={3} sm={4}>
           <LeftBar />
         </Grid>
-        <Grid item md={6} sm={8}>
+        <Grid item md={6} sm={8} xs={12}>
           <Chat />
         </Grid>
         <Grid item md={3}>

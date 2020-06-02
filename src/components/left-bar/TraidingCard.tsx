@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   makeStyles,
   Card,
@@ -8,6 +8,10 @@ import {
 } from '@material-ui/core';
 import avatar from '../../assets/avatar.png';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import { Trade } from '../../store/trades/types';
+import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { allTrades, selectedTrade } from '../../store/selectors';
 
 const useStyles = makeStyles(({ palette }) => ({
   root: {
@@ -25,7 +29,7 @@ const useStyles = makeStyles(({ palette }) => ({
     display: 'inline-block',
     margin: '0 2px',
     transform: 'scale(3)',
-    color: palette.success.main,
+    color: palette.text.disabled,
   },
   title: {
     fontSize: 18,
@@ -33,6 +37,9 @@ const useStyles = makeStyles(({ palette }) => ({
   },
   pos: {
     marginBottom: 12,
+  },
+  success: {
+    color: palette.success.main,
   },
   bold: {
     fontWeight: 'bold',
@@ -45,19 +52,30 @@ const useStyles = makeStyles(({ palette }) => ({
     border: '2px solid',
     borderColor: palette.primary.main,
   },
+  status: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    maxWidth: 42,
+  },
 }));
 
-interface TraidingCardProps {
+interface TraidingCardProps extends React.HTMLAttributes<HTMLDivElement> {
   selected?: boolean;
+  tradeInfo: Trade;
 }
 
-const TraidingCard: React.FC<TraidingCardProps> = ({ selected }) => {
+const TraidingCard: React.FC<TraidingCardProps> = ({ selected, tradeInfo }) => {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <Card
       className={`${classes.root} ${selected && classes.selected}`}
       variant="outlined"
+      onClick={() => {
+        history.push(`/${tradeInfo.id}`);
+      }}
     >
       <CardContent className={classes.content}>
         <div>
@@ -69,18 +87,27 @@ const TraidingCard: React.FC<TraidingCardProps> = ({ selected }) => {
             color="textSecondary"
             gutterBottom
           >
-            Chanaar <span className={classes.bold}>is byuing</span>
+            {tradeInfo.buyerName}{' '}
+            <span className={classes.bold}>is byuing</span>
           </Typography>
           <Typography variant="h5" component="h2">
-            Amazon Gift Card
+            {tradeInfo.paymentMethod}
           </Typography>
           <Typography className={classes.pos} color="textSecondary">
-            77 USD (0.00542345 BTC)
+            {tradeInfo.amount}
           </Typography>
         </div>
-        <div>
+        <div className={classes.status}>
           <Avatar alt="Remy Sharp" src={avatar} />
-          <Typography variant="h5">Paid</Typography>
+          {tradeInfo.isPaid ? (
+            <Typography variant="h6" className={classes.success}>
+              PAID
+            </Typography>
+          ) : (
+            <Typography variant="h6" color="textSecondary">
+              NOT PAID
+            </Typography>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -1,11 +1,7 @@
 import React from 'react';
 import avatar from '../../assets/avatar.png';
 import { makeStyles, Typography, Avatar } from '@material-ui/core';
-import LeftBar from '../left-bar/LeftBar';
-
-interface MessageProps {
-  income?: boolean;
-}
+import { Message as IMessage } from '../../store/trades/types';
 
 const useStyles = makeStyles(({ palette }) => ({
   root: {
@@ -17,6 +13,7 @@ const useStyles = makeStyles(({ palette }) => ({
   income: {
     float: 'left',
     flexDirection: 'row-reverse',
+    justifyContent: 'flex-end',
     '& span': {
       float: 'left',
     },
@@ -37,21 +34,16 @@ const useStyles = makeStyles(({ palette }) => ({
   },
 }));
 
-const Message: React.FC<MessageProps> = ({ income }) => {
+const Message: React.FC<IMessage> = ({ text, income, time }) => {
   const classes = useStyles();
 
   return (
     <div className={`${classes.root} ${income && classes.income}`}>
       <div>
         <div className={classes.message}>
-          <Typography>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic
-            accusantium minus error facere et impedit autem aspernatur nostrum
-            reiciendis, obcaecati praesentium rem sunt quod repellat est natus
-            eligendi quia ut.
-          </Typography>
+          <Typography>{text}</Typography>
         </div>
-        <span className={classes.timeStamp}>14:20</span>
+        <span className={classes.timeStamp}>{time}</span>
       </div>
       <Avatar alt="Remy Sharp" src={avatar} className={classes.avatar} />
     </div>
