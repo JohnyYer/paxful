@@ -14,10 +14,17 @@ import Message from './Message';
 
 interface ChatProps {}
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(({ palette, breakpoints }) => ({
   root: {
-    padding: 20,
+    height: '89vh',
+    paddingTop: 20,
     backgroundColor: palette.action.hover,
+    [breakpoints.up('md')]: {
+      padding: 20,
+    },
+    [breakpoints.down('sm')]: {
+      paddingTop: 40,
+    },
   },
   heading: {
     textAlign: 'center',
@@ -44,8 +51,11 @@ const useStyles = makeStyles(({ palette }) => ({
   },
   chat: {
     marginTop: 5,
-    maxHeight: '55vh',
+    maxHeight: '60vh',
     overflowX: 'auto',
+    [breakpoints.up('md')]: {
+      maxHeight: '52vh',
+    },
   },
   messageInput: {
     width: '100%',

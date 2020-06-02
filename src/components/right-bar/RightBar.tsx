@@ -1,8 +1,17 @@
-import React from 'react';
-import { Typography, Button, makeStyles, Avatar } from '@material-ui/core';
+import React, { Fragment, useState } from 'react';
+import {
+  Typography,
+  Button,
+  makeStyles,
+  Avatar,
+  Hidden,
+  Drawer,
+  IconButton,
+} from '@material-ui/core';
 import avatar from '../../assets/avatar.png';
+import MenuIcon from '@material-ui/icons/Menu';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(({ palette, breakpoints }) => ({
   root: {
     textAlign: 'center',
     padding: '30px 10px 0px 10px',
@@ -50,13 +59,29 @@ const useStyles = makeStyles(({ palette }) => ({
     justifyContent: 'center',
     minHeight: 70,
   },
+  mobileDrawer: {
+    width: '80%',
+  },
+  burger: {
+    position: 'absolute',
+    right: 0,
+    top: 64,
+    [breakpoints.down('sm')]: {
+      top: 54,
+    },
+  },
 }));
 
 interface RightBarProps {}
 
 const RightBar: React.FC<RightBarProps> = ({}) => {
   const classes = useStyles();
-  return (
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+  const barInner = (
     <div className={classes.root}>
       <Typography variant="h5">
         You are trading with <b>Chanaar</b>
@@ -113,6 +138,38 @@ const RightBar: React.FC<RightBarProps> = ({}) => {
         </div>
       </div>
     </div>
+  );
+  return (
+    <Fragment>
+      <Hidden smDown implementation="css">
+        {barInner}
+      </Hidden>
+      <Hidden mdUp implementation="css">
+        <IconButton
+          color="primary"
+          aria-label="open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          className={classes.burger}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          classes={{
+            paper: classes.mobileDrawer,
+          }}
+          anchor="right"
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+          {barInner}
+        </Drawer>
+      </Hidden>
+    </Fragment>
   );
 };
 

@@ -1,5 +1,12 @@
 import React from 'react';
-import { AppBar, Toolbar, Button, makeStyles } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  makeStyles,
+  Box,
+  Hidden,
+} from '@material-ui/core';
 
 interface SubNavigationProps {}
 
@@ -9,6 +16,7 @@ const useStyles = makeStyles(({ palette }) => ({
     textTransform: 'none',
     backgroundColor: 'white',
     minHeight: 'fit-content',
+    overflowY: 'auto',
   },
   toolbar: {
     minHeight: 'fit-content',
@@ -18,15 +26,15 @@ const useStyles = makeStyles(({ palette }) => ({
     borderRadius: 0,
     textTransform: 'none',
     padding: '10px 20px',
-    color: palette.primary.main
+    color: palette.primary.main,
   },
 }));
 
 const SubNavigation: React.FC<SubNavigationProps> = ({}) => {
   const classes = useStyles();
   return (
-    <AppBar position="static" className={classes.root}>
-      <Toolbar className={classes.toolbar}>
+    <Hidden smDown implementation="css">
+      <Box boxShadow={3} className={classes.root}>
         <Button className={classes.button}>Buy bitcoins</Button>
         <Button className={classes.button}>Overview</Button>
         <Button className={classes.button}>Trades</Button>
@@ -34,8 +42,8 @@ const SubNavigation: React.FC<SubNavigationProps> = ({}) => {
         <Button className={classes.button}>Your offers</Button>
         <Button className={classes.button}>My Team</Button>
         <Button className={classes.button}>Trade History</Button>
-      </Toolbar>
-    </AppBar>
+      </Box>
+    </Hidden>
   );
 };
 

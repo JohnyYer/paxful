@@ -14,13 +14,13 @@ const App: React.FC = () => {
         <SubNavigation />
       </Grid>
       <Grid item container>
-        <Grid item xs={3}>
+        <Grid item md={3} sm={4}>
           <LeftBar />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item md={6} sm={8}>
           <Chat />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item md={3}>
           <RightBar />
         </Grid>
       </Grid>
