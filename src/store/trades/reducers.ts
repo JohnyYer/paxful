@@ -37,6 +37,7 @@ export const tradeReducer = (state = initialState, action: TradeActionTypes) =>
         break;
       case SWITCH_USER:
         draft.isSeller = action.payload;
+        draft.selected = null;
         break;
       case SEND_MESSAGE:
         tradeIdx = getIdx('id', state.selected, draft.trades) || 0;
