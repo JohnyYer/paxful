@@ -7,7 +7,10 @@ export const Trades: Trade[] = [
     paymentMethod: 'Amazon Gift Card',
     amount: '77 USD (0.00542345 BTC)',
     isPaid: true,
-    chat: []
+    chat: {
+      messages: [],
+      gotUnreads: false,
+    },
   },
   {
     id: 2,
@@ -15,7 +18,10 @@ export const Trades: Trade[] = [
     paymentMethod: 'iTunes Gift Card',
     amount: '30 USD (0.00542345 BTC)',
     isPaid: false,
-    chat: []
+    chat: {
+      messages: [],
+      gotUnreads: false,
+    },
   },
   {
     id: 3,
@@ -23,7 +29,10 @@ export const Trades: Trade[] = [
     paymentMethod: 'Amazon Gift Card',
     amount: '45 USD (0.00542345 BTC)',
     isPaid: true,
-    chat: []
+    chat: {
+      messages: [],
+      gotUnreads: false,
+    },
   },
   {
     id: 4,
@@ -31,6 +40,9 @@ export const Trades: Trade[] = [
     paymentMethod: 'PayPal',
     amount: '77 USD (0.00542345 BTC)',
     isPaid: false,
-    chat: []
+    chat: {
+      messages: [],
+      gotUnreads: false,
+    },
   },
 ];

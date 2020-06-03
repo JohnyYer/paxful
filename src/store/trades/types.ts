@@ -10,18 +10,24 @@ export interface Trade {
   paymentMethod: string;
   amount: string;
   isPaid: boolean;
-  chat?: Message[];
+  chat: {
+    messages: Message[];
+    gotUnreads: boolean;
+  };
 }
 
 export interface TradesState {
   trades: Trade[];
   selected: number | null;
+  isSeller: boolean;
 }
 
 // Describing the different ACTION NAMES available
 export const SELECT_TRADE = 'SELECT_TRADE';
 export const FETCH_TRADES = 'FETCH_TRADES';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
+export const DELETE_TRADE = 'DELETE_TRADE';
+export const SWITCH_USER = 'SWITCH_USER';
 
 interface SelectTradeAction {
   type: typeof SELECT_TRADE;
@@ -38,7 +44,19 @@ interface PostMessageAction {
   payload: Message;
 }
 
+interface DeleteTradeAction {
+  type: typeof DELETE_TRADE;
+  payload: number;
+}
+
+interface SwitchUserAction {
+  type: typeof SWITCH_USER;
+  payload: boolean;
+}
+
 export type TradeActionTypes =
   | SelectTradeAction
   | FetchTradesAction
-  | PostMessageAction;
+  | PostMessageAction
+  | DeleteTradeAction
+  | SwitchUserAction;

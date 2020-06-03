@@ -10,8 +10,12 @@ import {
   Drawer,
   Box,
   Divider,
+  Grid,
+  Switch,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import { useDispatch } from 'react-redux';
+import { switchUser } from '../../store/trades/actions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,11 +38,16 @@ const useStyles = makeStyles((theme) => ({
   mobileDrawer: {
     width: '40%',
   },
+  accountSwitcher: {
+    marginRight: 80,
+  },
 }));
 
 const Navigation: React.FC = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isSeller, setIsSeller] = useState(true);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -73,6 +82,23 @@ const Navigation: React.FC = () => {
         <Typography variant="h6" className={classes.title}>
           Paxful
         </Typography>
+        <Typography component="div" className={classes.accountSwitcher}>
+          <Grid component="label" container alignItems="center" spacing={1}>
+            <Grid item>Buyer</Grid>
+            <Grid item>
+              <Switch
+                checked={isSeller}
+                onChange={(e) => {
+                  setIsSeller(!isSeller);
+                  dispatch(switchUser(!isSeller));
+                }}
+                name="checkedC"
+              />
+            </Grid>
+            <Grid item>Seller</Grid>
+          </Grid>
+        </Typography>
+
         <Hidden smDown implementation="css">
           {Navigation}
         </Hidden>

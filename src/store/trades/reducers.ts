@@ -4,38 +4,49 @@ import {
   SELECT_TRADE,
   FETCH_TRADES,
   SEND_MESSAGE,
+  DELETE_TRADE,
+  SWITCH_USER,
 } from './types';
+import produce from 'immer';
+import { getIdx } from '../utils';
 
 const initialState: TradesState = {
   trades: [],
   selected: null,
+  isSeller: true,
 };
 
-export function tradeReducer(
-  state = initialState,
-  action: TradeActionTypes
-): TradesState {
-  switch (action.type) {
-    case SELECT_TRADE: {
-      return {
-        ...state,
-        ...{ selected: action.payload },
-      };
-    }
-    case FETCH_TRADES: {
-      return {
-        ...state,
-        ...{ trades: action.payload },
-      };
-    }
-    case SEND_MESSAGE: {
-      state.trades
-        .find((trade) => trade.id === state.selected)
-        ?.chat?.push(action.payload);
+export const tradeReducer = (state = initialState, action: TradeActionTypes) =>
+  produce(state, (draft) => {
+    let tradeIdx;
+    switch (action.type) {
+      case SELECT_TRADE:
+        tradeIdx = getIdx('id', action.payload, draft.trades) || 0;
 
-      return state;
+        if (draft.isSeller) {
+          draft.trades[tradeIdx].chat.gotUnreads = false;
+        }
+        draft.selected = action.payload;
+        break;
+      case FETCH_TRADES:
+        draft.trades = action.payload;
+        break;
+      case DELETE_TRADE:
+        draft.trades.splice(action.payload, 1);
+        draft.selected = null;
+        break;
+      case SWITCH_USER:
+        draft.isSeller = action.payload;
+        break;
+      case SEND_MESSAGE:
+        tradeIdx = getIdx('id', state.selected, draft.trades) || 0;
+
+        if (action.payload.income) {
+          draft.trades[tradeIdx].chat.gotUnreads = true;
+        }
+        draft.trades[tradeIdx].chat.messages.push(action.payload);
+        break;
+      default:
+        return draft;
     }
-    default:
-      return state;
-  }
-}
+  });

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   makeStyles,
   Card,
@@ -11,7 +11,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { Trade } from '../../store/trades/types';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { allTrades, selectedTrade } from '../../store/selectors';
+import { selectIsSeller } from '../../store/selectors';
 
 const useStyles = makeStyles(({ palette }) => ({
   root: {
@@ -30,6 +30,12 @@ const useStyles = makeStyles(({ palette }) => ({
     margin: '0 2px',
     transform: 'scale(3)',
     color: palette.text.disabled,
+  },
+  dotGreen: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(3)',
+    color: palette.success.main,
   },
   title: {
     fontSize: 18,
@@ -61,17 +67,20 @@ const useStyles = makeStyles(({ palette }) => ({
 }));
 
 interface TraidingCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  selected?: boolean;
+  selected: number | null;
   tradeInfo: Trade;
 }
 
 const TraidingCard: React.FC<TraidingCardProps> = ({ selected, tradeInfo }) => {
   const classes = useStyles();
   const history = useHistory();
+  const isSeller = useSelector(selectIsSeller);
 
   return (
     <Card
-      className={`${classes.root} ${selected && classes.selected}`}
+      className={`${classes.root} ${
+        selected === tradeInfo.id && classes.selected
+      }`}
       variant="outlined"
       onClick={() => {
         history.push(`/${tradeInfo.id}`);
@@ -79,7 +88,11 @@ const TraidingCard: React.FC<TraidingCardProps> = ({ selected, tradeInfo }) => {
     >
       <CardContent className={classes.content}>
         <div>
-          <span className={classes.dot}>•</span>
+          {tradeInfo.chat.gotUnreads && isSeller ? (
+            <span className={classes.dotGreen}>•</span>
+          ) : (
+            <span className={classes.dot}>•</span>
+          )}
         </div>
         <div>
           <Typography
@@ -87,7 +100,7 @@ const TraidingCard: React.FC<TraidingCardProps> = ({ selected, tradeInfo }) => {
             color="textSecondary"
             gutterBottom
           >
-            {tradeInfo.buyerName}{' '}
+            {tradeInfo.buyerName}
             <span className={classes.bold}>is byuing</span>
           </Typography>
           <Typography variant="h5" component="h2">

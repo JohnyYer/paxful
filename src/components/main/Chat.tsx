@@ -5,16 +5,18 @@ import {
   Divider,
   InputAdornment,
   Button,
-  Input,
   OutlinedInput,
 } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import Message from './Message';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectedTrade, allTrades } from '../../store/selectors';
-import { Trade } from '../../store/trades/types';
-import { useParams } from 'react-router-dom';
-import { selectTrade, sendMessage } from '../../store/trades/actions';
+import { selectIsSeller, selectCurrentTrade } from '../../store/selectors';
+import { useParams, useHistory } from 'react-router-dom';
+import {
+  selectTrade,
+  sendMessage,
+  deleteTrade,
+} from '../../store/trades/actions';
 
 interface ChatProps {}
 
@@ -55,8 +57,8 @@ const useStyles = makeStyles(({ palette, breakpoints }) => ({
   },
   chat: {
     marginTop: 5,
-    maxHeight: '60vh',
-    minHeight: '60vh',
+    maxHeight: '57vh',
+    minHeight: '57vh',
     overflowX: 'auto',
     [breakpoints.up('md')]: {
       maxHeight: '52vh',
@@ -77,24 +79,16 @@ const Chat: React.FC<ChatProps> = ({}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { trade } = useParams();
-  const currentTradeID = useSelector(selectedTrade);
-  const tradesList = useSelector(allTrades);
-  const [tradeInfo, setTradeInfo] = useState<Trade | null>(null);
+  const isSeller = useSelector(selectIsSeller);
   const [message, setMessage] = useState<string>('');
+  const history = useHistory();
+  const currentTrade = useSelector(selectCurrentTrade);
 
   useEffect(() => {
     if (trade) {
       dispatch(selectTrade(parseInt(trade)));
     }
   }, [trade]);
-
-  useEffect(() => {
-    if (currentTradeID && tradesList.length > 0) {
-      const currentRate =
-        tradesList.find((trade) => trade.id === currentTradeID) || null;
-      setTradeInfo(currentRate);
-    }
-  }, [currentTradeID, tradesList]);
 
   const changeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
@@ -105,7 +99,7 @@ const Chat: React.FC<ChatProps> = ({}) => {
       const timeStamp = new Date();
       dispatch(
         sendMessage({
-          income: true,
+          income: !isSeller,
           text: message,
           time: `${timeStamp.getHours()} : ${timeStamp.getMinutes()} : ${timeStamp.getSeconds()}`,
         })
@@ -116,16 +110,22 @@ const Chat: React.FC<ChatProps> = ({}) => {
 
   return (
     <div className={classes.root}>
-      {tradeInfo ? (
+      {currentTrade ? (
         <Fragment>
           <div className={classes.heading}>
             <div className={classes.circleIcon}>
-              <DeleteOutlineIcon fontSize="large" />
+              <DeleteOutlineIcon
+                fontSize="large"
+                onClick={() => {
+                  dispatch(deleteTrade(currentTrade.id));
+                  history.push('/');
+                }}
+              />
             </div>
             <div>
-              <Typography variant="h4">{tradeInfo?.paymentMethod}</Typography>
+              <Typography variant="h4">{currentTrade.paymentMethod}</Typography>
               <Typography color="textSecondary" variant="h5" gutterBottom>
-                Chanaar
+                {currentTrade.buyerName}
                 <span className={classes.success}> +37 </span>/
                 <span className={classes.error}> -1 </span>
               </Typography>
@@ -133,7 +133,7 @@ const Chat: React.FC<ChatProps> = ({}) => {
             <Divider className={classes.divider} variant="middle" />
           </div>
           <div className={classes.chat}>
-            {tradeInfo?.chat?.map((message) => (
+            {currentTrade.chat.messages.map((message) => (
               <Message
                 key={message.time}
                 text={message.text}

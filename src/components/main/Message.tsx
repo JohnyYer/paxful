@@ -9,11 +9,11 @@ const useStyles = makeStyles(({ palette }) => ({
     width: '80%',
     float: 'right',
     padding: 15,
+    justifyContent: 'flex-end',
   },
   income: {
     float: 'left',
     flexDirection: 'row-reverse',
-    justifyContent: 'flex-end',
     '& span': {
       float: 'left',
     },
