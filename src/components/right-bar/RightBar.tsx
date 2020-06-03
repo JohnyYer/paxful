@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import {
   Typography,
   Button,
@@ -10,6 +10,8 @@ import {
 } from '@material-ui/core';
 import avatar from '../../assets/avatar.png';
 import MenuIcon from '@material-ui/icons/Menu';
+import { useDispatch } from 'react-redux';
+import { thunkGetTradeInfo } from '../../store/trades/thunks';
 
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
   root: {
@@ -76,11 +78,19 @@ interface RightBarProps {}
 
 const RightBar: React.FC<RightBarProps> = ({}) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  useEffect(() => {
+    setInterval(() => {
+      dispatch(thunkGetTradeInfo());
+    }, 3000);
+  }, []);
+
   const barInner = (
     <div className={classes.root}>
       <Typography variant="h5">
