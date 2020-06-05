@@ -10,32 +10,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import { allTrades } from './store/selectors';
 
 const App: React.FC = () => {
-  const dispatch = useDispatch();
-  const tradesList = useSelector(allTrades);
+    const dispatch = useDispatch();
+    const tradesList = useSelector(allTrades);
 
-  useEffect(() => {
-    dispatch(thunkGetTrades());
-  }, []);
+    useEffect(() => {
+        dispatch(thunkGetTrades());
+    });
 
-  return (
-    <Grid container direction="column">
-      <Grid item>
-        <Navigation />
-        <SubNavigation />
-      </Grid>
-      <Grid item container>
-        <Grid item md={3} sm={4}>
-          <LeftBar />
+    return (
+        <Grid container direction="column">
+            <Grid item>
+                <Navigation />
+                <SubNavigation />
+            </Grid>
+            <Grid item container>
+                <Grid item md={3} sm={4}>
+                    <LeftBar />
+                </Grid>
+                <Grid item md={6} sm={8} xs={12}>
+                    {tradesList.length > 0 ? <Chat /> : <LinearProgress />}
+                </Grid>
+                <Grid item md={3}>
+                    <RightBar />
+                </Grid>
+            </Grid>
         </Grid>
-        <Grid item md={6} sm={8} xs={12}>
-          {tradesList.length > 0 ? <Chat /> : <LinearProgress />}
-        </Grid>
-        <Grid item md={3}>
-          <RightBar />
-        </Grid>
-      </Grid>
-    </Grid>
-  );
+    );
 };
 
 export default App;
