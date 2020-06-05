@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Grid, LinearProgress } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import Navigation from './components/header/Navigation';
 import SubNavigation from './components/header/SubNavigation';
 import LeftBar from './components/left-bar/LeftBar';
@@ -15,7 +15,7 @@ const App: React.FC = () => {
 
     useEffect(() => {
         dispatch(thunkGetTrades());
-    });
+    }, [dispatch]);
 
     return (
         <Grid container direction="column">
@@ -23,17 +23,26 @@ const App: React.FC = () => {
                 <Navigation />
                 <SubNavigation />
             </Grid>
-            <Grid item container>
-                <Grid item md={3} sm={4}>
-                    <LeftBar />
+
+            {tradesList.length > 0 ? (
+                <Grid item container>
+                    <Grid item md={3} sm={4}>
+                        <LeftBar />
+                    </Grid>
+                    <Grid item md={6} sm={8} xs={12}>
+                        <Chat />
+                    </Grid>
+                    <Grid item md={3}>
+                        <RightBar />
+                    </Grid>
                 </Grid>
-                <Grid item md={6} sm={8} xs={12}>
-                    {tradesList.length > 0 ? <Chat /> : <LinearProgress />}
+            ) : (
+                <Grid item style={{ textAlign: 'center' }}>
+                    <Typography variant="h6" color="initial">
+                        Oops, you deleted all trades. Refresh the page
+                    </Typography>
                 </Grid>
-                <Grid item md={3}>
-                    <RightBar />
-                </Grid>
-            </Grid>
+            )}
         </Grid>
     );
 };

@@ -6,6 +6,7 @@ import {
     SEND_MESSAGE,
     DELETE_TRADE,
     SWITCH_USER,
+    MARK_AS_READ,
 } from './types';
 import produce from 'immer';
 import { getIdx } from '../utils';
@@ -22,17 +23,14 @@ export const tradeReducer = (state = initialState, action: TradeActionTypes) =>
         switch (action.type) {
             case SELECT_TRADE:
                 tradeIdx = getIdx('id', action.payload, draft.trades) || 0;
-
-                if (draft.isSeller) {
-                    draft.trades[tradeIdx].chat.gotUnreads = false;
-                }
                 draft.selected = action.payload;
                 break;
             case FETCH_TRADES:
                 draft.trades = action.payload;
                 break;
             case DELETE_TRADE:
-                draft.trades.splice(action.payload, 1);
+                tradeIdx = getIdx('id', action.payload, draft.trades) || 0;
+                draft.trades.splice(tradeIdx, 1);
                 draft.selected = null;
                 break;
             case SWITCH_USER:
@@ -41,11 +39,16 @@ export const tradeReducer = (state = initialState, action: TradeActionTypes) =>
                 break;
             case SEND_MESSAGE:
                 tradeIdx = getIdx('id', state.selected, draft.trades) || 0;
-
-                if (action.payload.income) {
-                    draft.trades[tradeIdx].chat.gotUnreads = true;
-                }
+                action.payload.income
+                    ? (draft.trades[tradeIdx].chat.gotUnreads.seller = true)
+                    : (draft.trades[tradeIdx].chat.gotUnreads.buyer = true);
                 draft.trades[tradeIdx].chat.messages.push(action.payload);
+                break;
+            case MARK_AS_READ:
+                tradeIdx = getIdx('id', action.payload, draft.trades) || 0;
+                draft.isSeller
+                    ? (draft.trades[tradeIdx].chat.gotUnreads.seller = false)
+                    : (draft.trades[tradeIdx].chat.gotUnreads.buyer = false);
                 break;
             default:
                 return draft;

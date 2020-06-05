@@ -10,8 +10,9 @@ import avatar from '../../assets/avatar.png';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { Trade } from '../../store/trades/types';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectIsSeller } from '../../store/selectors';
+import { markAsRead } from '../../store/trades/actions';
 
 const useStyles = makeStyles(({ palette }) => ({
     root: {
@@ -72,6 +73,7 @@ interface TraidingCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const TraidingCard: React.FC<TraidingCardProps> = ({ selected, tradeInfo }) => {
+    const dispatch = useDispatch();
     const classes = useStyles();
     const history = useHistory();
     const isSeller = useSelector(selectIsSeller);
@@ -84,11 +86,13 @@ const TraidingCard: React.FC<TraidingCardProps> = ({ selected, tradeInfo }) => {
             variant="outlined"
             onClick={() => {
                 history.push(`/${tradeInfo.id}`);
+                dispatch(markAsRead(tradeInfo.id));
             }}
         >
             <CardContent className={classes.content}>
                 <div>
-                    {tradeInfo.chat.gotUnreads && isSeller ? (
+                    {(isSeller && tradeInfo.chat.gotUnreads.seller) ||
+                    (!isSeller && tradeInfo.chat.gotUnreads.buyer) ? (
                         <span className={classes.dotGreen}>•</span>
                     ) : (
                         <span className={classes.dot}>•</span>

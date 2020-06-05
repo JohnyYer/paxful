@@ -6,6 +6,7 @@ import {
     Message,
     DELETE_TRADE,
     SWITCH_USER,
+    MARK_AS_READ,
 } from './types';
 
 export function selectTrade(tradeID: number | null) {
@@ -40,5 +41,12 @@ export function sendMessage(message: Message) {
     return {
         type: SEND_MESSAGE,
         payload: message,
+    };
+}
+
+export function markAsRead(tradeID: number) {
+    return {
+        type: MARK_AS_READ,
+        payload: tradeID,
     };
 }

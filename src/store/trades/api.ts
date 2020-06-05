@@ -9,7 +9,10 @@ export const Trades: Trade[] = [
         isPaid: true,
         chat: {
             messages: [],
-            gotUnreads: false,
+            gotUnreads: {
+                buyer: false,
+                seller: false,
+            },
         },
     },
     {
@@ -20,7 +23,10 @@ export const Trades: Trade[] = [
         isPaid: false,
         chat: {
             messages: [],
-            gotUnreads: false,
+            gotUnreads: {
+                buyer: false,
+                seller: false,
+            },
         },
     },
     {
@@ -31,7 +37,10 @@ export const Trades: Trade[] = [
         isPaid: true,
         chat: {
             messages: [],
-            gotUnreads: false,
+            gotUnreads: {
+                buyer: false,
+                seller: false,
+            },
         },
     },
     {
@@ -42,7 +51,10 @@ export const Trades: Trade[] = [
         isPaid: false,
         chat: {
             messages: [],
-            gotUnreads: false,
+            gotUnreads: {
+                buyer: false,
+                seller: false,
+            },
         },
     },
 ];

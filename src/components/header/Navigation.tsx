@@ -15,6 +15,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import { useDispatch } from 'react-redux';
 import { switchUser } from '../../store/trades/actions';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,6 +51,7 @@ const Navigation: React.FC = () => {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+    const history = useHistory();
 
     const Navigation = (
         <Fragment>
@@ -95,6 +97,7 @@ const Navigation: React.FC = () => {
                                 onChange={() => {
                                     setIsSeller(!isSeller);
                                     dispatch(switchUser(!isSeller));
+                                    history.push('/');
                                 }}
                                 name="checkedC"
                             />

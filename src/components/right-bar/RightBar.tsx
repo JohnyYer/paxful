@@ -84,9 +84,9 @@ const RightBar: React.FC = () => {
     };
 
     useEffect(() => {
-        setInterval(() => {
-            dispatch(thunkGetTradeInfo());
-        }, 3000);
+        // setInterval(() => {
+        //     dispatch(thunkGetTradeInfo());
+        // }, 3000);
     }, [dispatch]);
 
     const barInner = (
