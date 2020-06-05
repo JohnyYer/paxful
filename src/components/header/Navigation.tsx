@@ -9,7 +9,6 @@ import {
     IconButton,
     Drawer,
     Divider,
-    Grid,
     Switch,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -20,6 +19,7 @@ import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        height: 56,
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -36,10 +36,13 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold',
     },
     mobileDrawer: {
-        width: '40%',
+        width: '45%',
     },
     accountSwitcher: {
-        marginRight: 80,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 20,
     },
 }));
 
@@ -52,6 +55,22 @@ const Navigation: React.FC = () => {
         setMobileOpen(!mobileOpen);
     };
     const history = useHistory();
+
+    const accountSwitcher = (
+        <Typography component="div" className={classes.accountSwitcher}>
+            <div>Buyer</div>
+            <Switch
+                checked={isSeller}
+                onChange={() => {
+                    setIsSeller(!isSeller);
+                    dispatch(switchUser(!isSeller));
+                    history.push('/');
+                }}
+                name="checkedC"
+            />
+            <div>Seller</div>
+        </Typography>
+    );
 
     const Navigation = (
         <Fragment>
@@ -83,29 +102,7 @@ const Navigation: React.FC = () => {
                 <Typography variant="h6" className={classes.title}>
                     Paxful
                 </Typography>
-                <Typography component="div" className={classes.accountSwitcher}>
-                    <Grid
-                        component="label"
-                        container
-                        alignItems="center"
-                        spacing={1}
-                    >
-                        <Grid item>Buyer</Grid>
-                        <Grid item>
-                            <Switch
-                                checked={isSeller}
-                                onChange={() => {
-                                    setIsSeller(!isSeller);
-                                    dispatch(switchUser(!isSeller));
-                                    history.push('/');
-                                }}
-                                name="checkedC"
-                            />
-                        </Grid>
-                        <Grid item>Seller</Grid>
-                    </Grid>
-                </Typography>
-
+                {accountSwitcher}
                 <Hidden smDown implementation="css">
                     {Navigation}
                 </Hidden>
