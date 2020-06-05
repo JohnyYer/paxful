@@ -7,6 +7,9 @@ import {
     DELETE_TRADE,
     SWITCH_USER,
     MARK_AS_READ,
+    TRADING_INFO_FETCHING,
+    TRADING_INFO_LOADED,
+    FETCH_TRADING_INFO,
 } from './types';
 import produce from 'immer';
 import { getIdx } from '../utils';
@@ -15,6 +18,11 @@ const initialState: TradesState = {
     trades: [],
     selected: null,
     isSeller: true,
+    tradingInfo: {
+        isLoaded: false,
+        isFetching: false,
+        bpi: null,
+    },
 };
 
 export const tradeReducer = (state = initialState, action: TradeActionTypes) =>
@@ -49,6 +57,17 @@ export const tradeReducer = (state = initialState, action: TradeActionTypes) =>
                 draft.isSeller
                     ? (draft.trades[tradeIdx].chat.gotUnreads.seller = false)
                     : (draft.trades[tradeIdx].chat.gotUnreads.buyer = false);
+                break;
+            case TRADING_INFO_FETCHING:
+                draft.tradingInfo.isFetching = true;
+                draft.tradingInfo.isLoaded = false;
+                break;
+            case TRADING_INFO_LOADED:
+                draft.tradingInfo.isLoaded = true;
+                draft.tradingInfo.isFetching = false;
+                break;
+            case FETCH_TRADING_INFO:
+                draft.tradingInfo.bpi = action.payload;
                 break;
             default:
                 return draft;

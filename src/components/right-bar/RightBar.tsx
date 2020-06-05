@@ -7,11 +7,13 @@ import {
     Hidden,
     Drawer,
     IconButton,
+    CircularProgress,
 } from '@material-ui/core';
 import avatar from '../../assets/avatar.png';
 import MenuIcon from '@material-ui/icons/Menu';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { thunkGetTradeInfo } from '../../store/trades/thunks';
+import { selectTradeInfo } from '../../store/selectors';
 
 const useStyles = makeStyles(({ palette, breakpoints }) => ({
     root: {
@@ -78,16 +80,17 @@ const RightBar: React.FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const tradingInfo = useSelector(selectTradeInfo);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
     useEffect(() => {
-        // setInterval(() => {
-        //     dispatch(thunkGetTradeInfo());
-        // }, 3000);
-    }, [dispatch]);
+        setInterval(() => {
+            dispatch(thunkGetTradeInfo());
+        }, 3000);
+    }, []);
 
     const barInner = (
         <div className={classes.root}>
@@ -149,6 +152,24 @@ const RightBar: React.FC = () => {
                     </div>
                 </div>
             </div>
+            {tradingInfo.isFetching ? (
+                <CircularProgress />
+            ) : (
+                <Typography component="div" align="center">
+                    <Typography variant="h6" color="initial">
+                        {tradingInfo.bpi?.USD.description}
+                    </Typography>
+                    <Typography variant="h6" color="initial">
+                        {tradingInfo.bpi?.USD.code}
+                    </Typography>
+                    <Typography variant="h6" color="initial">
+                        {tradingInfo.bpi?.USD.rate}
+                    </Typography>
+                    <Typography variant="h6" color="initial">
+                        {tradingInfo.bpi?.USD.rate_float}
+                    </Typography>
+                </Typography>
+            )}
         </div>
     );
     return (

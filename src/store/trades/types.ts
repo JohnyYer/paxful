@@ -19,10 +19,26 @@ export interface Trade {
     };
 }
 
+export interface BPI {
+    USD: {
+        code: string;
+        rate: string;
+        description: string;
+        rate_float: number;
+    };
+}
+
+export interface TraidingInfo {
+    isLoaded: boolean;
+    isFetching: boolean;
+    bpi: BPI | null;
+}
+
 export interface TradesState {
     trades: Trade[];
     selected: number | null;
     isSeller: boolean;
+    tradingInfo: TraidingInfo;
 }
 
 // Describing the different ACTION NAMES available
@@ -32,6 +48,9 @@ export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const DELETE_TRADE = 'DELETE_TRADE';
 export const SWITCH_USER = 'SWITCH_USER';
 export const MARK_AS_READ = 'MARK_AS_READ';
+export const TRADING_INFO_FETCHING = 'TRADING_INFO_FETCHING';
+export const TRADING_INFO_LOADED = 'TRADING_INFO_LOADED';
+export const FETCH_TRADING_INFO = 'FETCH_TRADING_INFO';
 
 interface MarkAsReadAction {
     type: typeof MARK_AS_READ;
@@ -63,10 +82,26 @@ interface SwitchUserAction {
     payload: boolean;
 }
 
+interface FetchTradingInfoAction {
+    type: typeof FETCH_TRADING_INFO;
+    payload: BPI;
+}
+
+interface TradingInfoFeteching {
+    type: typeof TRADING_INFO_FETCHING;
+}
+
+interface TradingInfoLoaded {
+    type: typeof TRADING_INFO_LOADED;
+}
+
 export type TradeActionTypes =
     | SelectTradeAction
     | FetchTradesAction
     | PostMessageAction
     | DeleteTradeAction
     | SwitchUserAction
-    | MarkAsReadAction;
+    | MarkAsReadAction
+    | TradingInfoLoaded
+    | TradingInfoFeteching
+    | FetchTradingInfoAction;
